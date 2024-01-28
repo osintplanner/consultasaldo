@@ -17,9 +17,27 @@
     }
     
     .container {
+        width: 80%;
+        max-width: 1000px;
         text-align: center;
         padding: 40px;
         border-radius: 15px;
+    }
+    
+    .input-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+    
+    .input-container {
+        width: 50%;
+    }
+    
+    .title {
+        font-size: 2.4rem; /* Tamanho dobrado */
+        color: #FFFFFF; /* Títulos em branco */
+        margin-bottom: 10px;
     }
     
     h1 {
@@ -34,6 +52,7 @@
         color: #FFFFFF; /* Cor do texto em branco */
         padding: 20px;
         margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     input[type='text'] {
@@ -43,9 +62,8 @@
         background: #222;
         color: #00ff00; /* Cor verde neon */
         margin-top: 20px;
-        width: 100%;
+        width: calc(100% - 30px); /* Largura ajustada para mostrar endereços longos */
         box-sizing: border-box;
-        max-width: 500px;
         text-align: center;
     }
 
@@ -54,6 +72,12 @@
         box-shadow: 0 0 10px #00ff00; /* Sombra verde neon */
     }
 
+    .balance-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+    
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -61,17 +85,27 @@
 
 <div class="container">
     <h1>Verificador de Saldo Sepolia</h1>
-    <input type="text" id="address" placeholder="Endereço na Sepolia Testnet" autofocus>
-    <div id="balance" class="balance-display">--</div>
+    <div class="input-group">
+        <div class="input-container">
+            <div class="title">Address 1</div>
+            <input type="text" id="address1" placeholder="Endereço 1 na Sepolia Testnet" autofocus>
+            <div id="balance1" class="balance-display">--</div>
+        </div>
+        <div class="input-container">
+            <div class="title">Address 2</div>
+            <input type="text" id="address2" placeholder="Endereço 2 na Sepolia Testnet">
+            <div id="balance2" class="balance-display">--</div>
+        </div>
+    </div>
 </div>
 
 <script>
-let balanceInterval;
+let balanceInterval1, balanceInterval2;
 
-function checkBalance() {
-    const address = document.getElementById('address').value.trim();
+function checkBalance(addressId, balanceId) {
+    const address = document.getElementById(addressId).value.trim();
     if (address === '') {
-        document.getElementById('balance').innerText = '--';
+        document.getElementById(balanceId).innerText = '--';
         return;
     }
 
@@ -82,19 +116,26 @@ function checkBalance() {
     .then(response => response.json())
     .then(data => {
         const balance = data.result / 1e18; // Convertendo de Wei para Ether
-        document.getElementById('balance').innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
+        document.getElementById(balanceId).innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
     })
     .catch(error => {
         console.error('Erro ao buscar o saldo:', error);
     });
 }
 
-document.getElementById('address').addEventListener('input', function() {
-    clearInterval(balanceInterval);
-    if (this.value.trim() !== '') {
-        balanceInterval = setInterval(checkBalance, 3000);
-    }
-});
+function setupAddressInput(addressId, balanceId) {
+    document.getElementById(addressId).addEventListener('input', function() {
+        clearInterval(window['balanceInterval' + balanceId]);
+        if (this.value.trim() !== '') {
+            window['balanceInterval' + balanceId] = setInterval(() => checkBalance(addressId, balanceId), 3000);
+        } else {
+            document.getElementById(balanceId).innerText = '--';
+        }
+    });
+}
+
+setupAddressInput('address1', '1');
+setupAddressInput('address2', '2');
 
 </script>
 
