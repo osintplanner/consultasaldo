@@ -6,7 +6,10 @@
 <title>Verificar Saldo Sepolia</title>
 <style>
     body {
-        background: #333; /* Cor de fundo mais suave */
+        background-image: url('https://images3.alphacoders.com/627/627574.jpg'); /* Imagem de fundo */
+        background-size: cover; /* Garante que a imagem de fundo cubra toda a página */
+        background-position: center; /* Centraliza a imagem de fundo */
+        background-attachment: fixed; /* Fixa a imagem de fundo para rolar com a página */
         font-family: 'Orbitron', sans-serif;
         color: #0f0; /* Cor verde para boa legibilidade */
         display: flex;
@@ -19,9 +22,10 @@
     
     .main-title {
         font-size: 6rem;
-        color: #fff; /* Cor do título principal em verde */
+        color: #fff; /* Cor do título principal em branco */
         margin-bottom: 20px;
         text-align: center; /* Centraliza o título */
+        text-shadow: 2px 2px 4px #000; /* Sombra no texto para melhorar a legibilidade */
     }
     
     .container {
@@ -38,7 +42,7 @@
         text-align: center;
         padding: 20px;
         border-radius: 15px;
-        background: #222; /* Fundo dos contêineres de endereço */
+        background: rgba(34, 34, 34, 0.8); /* Fundo dos contêineres de endereço com transparência */
         margin: 10px; /* Espaçamento entre os contêineres */
         flex: 1; /* Flexibilidade para ocupar espaço disponível */
         min-width: 300px; /* Largura mínima para responsividade */
@@ -52,7 +56,7 @@
     
     .balance-display {
         font-size: 6rem; /* Tamanho da fonte ajustado para ser 3x maior */
-        background: #444; /* Fundo dos displays de saldo */
+        background: rgba(68, 68, 68, 0.8); /* Fundo dos displays de saldo com transparência */
         color: #fff; /* Cor do texto do saldo alterada para branco */
         padding: 20px;
         margin-top: 20px;
@@ -63,7 +67,7 @@
         padding: 15px;
         border-radius: 5px;
         border: 2px solid #0a0; /* Borda verde para se destacar */
-        background: #222;
+        background: rgba(34, 34, 34, 0.8); /* Barra de pesquisa com transparência */
         color: #fff; /* Cor branca para o texto dentro da barra de pesquisa */
         margin-top: 10px;
         width: 100%; /* Largura ajustada para preenchimento completo */
