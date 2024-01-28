@@ -6,9 +6,9 @@
 <title>Verificar Saldo Sepolia</title>
 <style>
     body {
-        background: #000000; /* Fundo preto */
+        background: #333; /* Cor de fundo mais suave */
         font-family: 'Orbitron', sans-serif;
-        color: #00ff00; /* Cor verde neon para uma aparência Web3 */
+        color: #0f0; /* Cor verde para boa legibilidade */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -18,48 +18,59 @@
     }
     
     .container {
+        display: flex; /* Coloca os itens lado a lado */
+        justify-content: space-around;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 1200px; /* Largura máxima do container */
+        margin-top: 50px; /* Espaço acima do container */
+    }
+    
+    .address-container {
         text-align: center;
         padding: 20px;
         border-radius: 15px;
-        margin-bottom: 20px; /* Espaçamento entre os containers */
+        background: #222; /* Fundo dos contêineres de endereço */
+        margin: 0 10px; /* Espaçamento entre os contêineres */
     }
     
     h1 {
-        font-size: 2.5rem;
-        color: #00ff00; /* Cor verde neon */
-        margin-bottom: 30px;
+        font-size: 2rem;
+        color: #0f0; /* Cor do título ajustada */
+        margin-bottom: 20px;
     }
     
     .address-title {
         font-size: 1.2rem;
-        color: #ffffff; /* Cor do texto em branco */
-        margin-bottom: 5px;
+        color: #fff; /* Cor do texto em branco para os títulos Address */
+        margin-bottom: 10px;
     }
     
     .balance-display {
-        font-size: 1.5rem; /* Tamanho da fonte reduzido para acomodar dois saldos */
-        background: transparent;
-        color: #FFFFFF; /* Cor do texto em branco */
-        padding: 10px;
-        margin-top: 10px;
+        font-size: 6rem; /* Tamanho da fonte ajustado para ser 3x maior */
+        background: #444; /* Fundo dos displays de saldo */
+        color: #0f0; /* Cor do texto verde para melhor contraste */
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px; /* Bordas arredondadas para os displays de saldo */
     }
 
     input[type='text'] {
-        padding: 10px;
+        padding: 15px;
         border-radius: 5px;
-        border: 2px solid transparent;
+        border: 2px solid #0a0; /* Borda verde para se destacar */
         background: #222;
-        color: #00ff00; /* Cor verde neon */
+        color: #0f0; /* Cor verde para o texto dentro da barra de pesquisa */
         margin-top: 10px;
         width: 100%;
         box-sizing: border-box;
-        max-width: 500px;
+        max-width: 300px; /* Largura máxima para as barras de pesquisa */
         text-align: center;
     }
 
     input[type='text']:focus {
         outline: none;
-        box-shadow: 0 0 10px #00ff00; /* Sombra verde neon */
+        box-shadow: 0 0 10px #0f0; /* Sombra verde para destacar o foco */
     }
 
 </style>
