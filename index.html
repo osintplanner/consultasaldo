@@ -17,13 +17,21 @@
         flex-direction: column; /* Organiza verticalmente */
     }
     
+    .main-title {
+        font-size: 2rem;
+        color: #fff; /* Cor do título principal em branco */
+        margin-bottom: 20px;
+        text-align: center; /* Centraliza o título */
+    }
+    
     .container {
         display: flex; /* Coloca os itens lado a lado */
         justify-content: space-around;
         align-items: flex-start;
+        flex-wrap: wrap; /* Permite quebra de linha se necessário */
         width: 100%;
         max-width: 1200px; /* Largura máxima do container */
-        margin-top: 50px; /* Espaço acima do container */
+        margin-top: 10px; /* Espaço acima do container */
     }
     
     .address-container {
@@ -31,17 +39,13 @@
         padding: 20px;
         border-radius: 15px;
         background: #222; /* Fundo dos contêineres de endereço */
-        margin: 0 10px; /* Espaçamento entre os contêineres */
-    }
-    
-    h1 {
-        font-size: 2rem;
-        color: #0f0; /* Cor do título ajustada */
-        margin-bottom: 20px;
+        margin: 10px; /* Espaçamento entre os contêineres */
+        flex: 1; /* Flexibilidade para ocupar espaço disponível */
+        min-width: 300px; /* Largura mínima para responsividade */
     }
     
     .address-title {
-        font-size: 1.2rem;
+        font-size: 2.4rem; /* Tamanho da fonte dobrado */
         color: #fff; /* Cor do texto em branco para os títulos Address */
         margin-bottom: 10px;
     }
@@ -49,7 +53,7 @@
     .balance-display {
         font-size: 6rem; /* Tamanho da fonte ajustado para ser 3x maior */
         background: #444; /* Fundo dos displays de saldo */
-        color: #0f0; /* Cor do texto verde para melhor contraste */
+        color: #fff; /* Cor do texto do saldo alterada para branco */
         padding: 20px;
         margin-top: 20px;
         border-radius: 10px; /* Bordas arredondadas para os displays de saldo */
@@ -60,11 +64,10 @@
         border-radius: 5px;
         border: 2px solid #0a0; /* Borda verde para se destacar */
         background: #222;
-        color: #0f0; /* Cor verde para o texto dentro da barra de pesquisa */
+        color: #fff; /* Cor branca para o texto dentro da barra de pesquisa */
         margin-top: 10px;
-        width: 100%;
+        width: 100%; /* Largura ajustada para preenchimento completo */
         box-sizing: border-box;
-        max-width: 300px; /* Largura máxima para as barras de pesquisa */
         text-align: center;
     }
 
@@ -78,15 +81,16 @@
 </head>
 <body>
 
+<div class="main-title">Verificar Saldo</div>
+
 <div class="container">
-    <h1>Verificador de Saldo Sepolia</h1>
     <div class="address-container">
-        <div class="address-title">Contrato Malicioso</div>
+        <div class="address-title">Address 1</div>
         <input type="text" id="address1" placeholder="Endereço 1 na Sepolia Testnet" autofocus>
         <div id="balance1" class="balance-display">--</div>
     </div>
     <div class="address-container">
-        <div class="address-title">Endereço do Criminoso</div>
+        <div class="address-title">Address 2</div>
         <input type="text" id="address2" placeholder="Endereço 2 na Sepolia Testnet">
         <div id="balance2" class="balance-display">--</div>
     </div>
