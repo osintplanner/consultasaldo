@@ -100,43 +100,44 @@
 </div>
 
 <script>
-let balanceInterval1, balanceInterval2;
+document.addEventListener('DOMContentLoaded', (event) => {
+    let balanceInterval1, balanceInterval2;
 
-function checkBalance(addressId, balanceId) {
-    const address = document.getElementById(addressId).value.trim();
-    if (address === '') {
-        document.getElementById(balanceId).innerText = '--';
-        return;
+    function checkBalance(addressId, balanceId) {
+        const address = document.getElementById(addressId).value.trim();
+        if (address === '') {
+            document.getElementById(balanceId).innerText = '--';
+            return;
+        }
+
+        const apiKey = 'DNJDG5KV5V8ZEG8NTYWYYIF6C38789P481';
+        const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+
+        fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const balance = data.result / 1e18; // Convertendo de Wei para Ether
+            document.getElementById(balanceId).innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
+        })
+        .catch(error => {
+            console.error('Erro ao buscar o saldo:', error);
+        });
     }
 
-    const apiKey = 'DNJDG5KV5V8ZEG8NTYWYYIF6C38789P481';
-    const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+    function setupAddressInput(addressId, balanceId) {
+        document.getElementById(addressId).addEventListener('input', function() {
+            clearInterval(window['balanceInterval' + balanceId]);
+            if (this.value.trim() !== '') {
+                window['balanceInterval' + balanceId] = setInterval(() => checkBalance(addressId, balanceId), 3000);
+            } else {
+                document.getElementById(balanceId).innerText = '--';
+            }
+        });
+    }
 
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        const balance = data.result / 1e18; // Convertendo de Wei para Ether
-        document.getElementById(balanceId).innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
-    })
-    .catch(error => {
-        console.error('Erro ao buscar o saldo:', error);
-    });
-}
-
-function setupAddressInput(addressId, balanceId) {
-    document.getElementById(addressId).addEventListener('input', function() {
-        clearInterval(window['balanceInterval' + balanceId]);
-        if (this.value.trim() !== '') {
-            window['balanceInterval' + balanceId] = setInterval(() => checkBalance(addressId, balanceId), 3000);
-        } else {
-            document.getElementById(balanceId).innerText = '--';
-        }
-    });
-}
-
-setupAddressInput('address1', '1');
-setupAddressInput('address2', '2');
-
+    setupAddressInput('address1', '1');
+    setupAddressInput('address2', '2');
+});
 </script>
 
 </body>
