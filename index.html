@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificar Saldo Sepolia</title>
+<style>
+    body {
+        background: #000000; /* Fundo preto */
+        font-family: 'Orbitron', sans-serif;
+        color: #00ff00; /* Cor verde neon para uma aparência Web3 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    
+    .container {
+        text-align: center;
+        padding: 40px;
+        border-radius: 15px;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+        color: #00ff00; /* Cor verde neon */
+        margin-bottom: 30px;
+    }
+    
+    .balance-display {
+        font-size: 4.5rem; /* Tamanho da fonte três vezes maior */
+        background: transparent;
+        color: #FFFFFF; /* Cor do texto em branco */
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    input[type='text'] {
+        padding: 15px;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background: #222;
+        color: #00ff00; /* Cor verde neon */
+        margin-top: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    input[type='text']:focus {
+        outline: none;
+        box-shadow: 0 0 10px #00ff00; /* Sombra verde neon */
+    }
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <h1>Verificador de Saldo Sepolia</h1>
+    <input type="text" id="address" placeholder="Endereço na Sepolia Testnet" autofocus>
+    <div id="balance" class="balance-display">--</div>
+</div>
+
+<script>
+let balanceInterval;
+
+function checkBalance() {
+    const address = document.getElementById('address').value.trim();
+    if (address === '') {
+        document.getElementById('balance').innerText = '--';
+        return;
+    }
+
+    const apiKey = 'DNJDG5KV5V8ZEG8NTYWYYIF6C38789P481';
+    const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+        const balance = data.result / 1e18; // Convertendo de Wei para Ether
+        document.getElementById('balance').innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
+    })
+    .catch(error => {
+        console.error('Erro ao buscar o saldo:', error);
+    });
+}
+
+document.getElementById('address').addEventListener('input', function() {
+    clearInterval(balanceInterval);
+    if (this.value.trim() !== '') {
+        balanceInterval = setInterval(checkBalance, 3000);
+    }
+});
+
+</script>
+
+</body>
+</html>
