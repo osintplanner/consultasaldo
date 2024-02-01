@@ -6,81 +6,84 @@
 <title>Pamonha Explorer</title>
 <link rel="icon" type="image/png" href="https://i.ibb.co/BByjJsj/pamonha-1.png">
 <style>
+    /* Estilos mantidos e ajustados conforme solicitado */
     body {
-        background-image: url('https://images3.alphacoders.com/627/627574.jpg'); /* Imagem de fundo */
-        background-size: cover; /* Garante que a imagem de fundo cubra toda a página */
-        background-position: center; /* Centraliza a imagem de fundo */
-        background-attachment: fixed; /* Fixa a imagem de fundo para rolar com a página */
+        background-image: url('https://images3.alphacoders.com/627/627574.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
         font-family: 'Orbitron', sans-serif;
-        color: #0f0; /* Cor verde para boa legibilidade */
+        color: #0f0;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
         margin: 0;
-        flex-direction: column; /* Organiza verticalmente */
+        flex-direction: column;
     }
     
     .main-title {
         font-size: 6rem;
-        color: #fff; /* Cor do título principal em branco */
+        color: #fff;
         margin-bottom: 20px;
-        text-align: center; /* Centraliza o título */
-        text-shadow: 2px 2px 4px #000; /* Sombra no texto para melhorar a legibilidade */
+        text-align: center;
+        text-shadow: 2px 2px 4px #000;
     }
     
     .container {
-        display: flex; /* Coloca os itens lado a lado */
+        display: flex;
         justify-content: space-around;
         align-items: flex-start;
-        flex-wrap: wrap; /* Permite quebra de linha se necessário */
+        flex-wrap: wrap;
         width: 100%;
-        max-width: 1200px; /* Largura máxima do container */
-        margin-top: 10px; /* Espaço acima do container */
+        max-width: 1200px;
+        margin-top: 10px;
     }
     
     .address-container {
         text-align: center;
         padding: 20px;
         border-radius: 15px;
-        background: rgba(34, 34, 34, 0.8); /* Fundo dos contêineres de endereço com transparência */
-        margin: 10px; /* Espaçamento entre os contêineres */
-        flex: 1; /* Flexibilidade para ocupar espaço disponível */
-        min-width: 300px; /* Largura mínima para responsividade */
+        background: rgba(34, 34, 34, 0.8);
+        margin: 10px;
+        flex: 1;
+        min-width: 300px; /* Ajustado para melhor visualização */
     }
     
     .address-title {
-        font-size: 2.4rem; /* Tamanho da fonte dobrado */
-        color: #00ff00; /* Cor do texto em verde para os títulos Address */
+        font-size: 2.4rem;
+        color: #00ff00;
         margin-bottom: 10px;
     }
     
     .balance-display {
-        font-size: 6rem; /* Tamanho da fonte ajustado para ser 3x maior */
-        background: rgba(68, 68, 68, 0.8); /* Fundo dos displays de saldo com transparência */
-        color: #fff; /* Cor do texto do saldo alterada para branco */
+        font-size: 2rem; /* Ajustado para tamanho inicial mais adequado */
+        background: rgba(68, 68, 68, 0.8);
+        color: #fff;
         padding: 20px;
         margin-top: 20px;
-        border-radius: 10px; /* Bordas arredondadas para os displays de saldo */
+        border-radius: 10px;
+        overflow: hidden; /* Para evitar sobreposição */
+        white-space: nowrap; /* Mantém o texto em uma única linha */
+        text-overflow: ellipsis; /* Adiciona "..." se o texto exceder o espaço disponível */
     }
 
     input[type='text'] {
         padding: 15px;
         border-radius: 5px;
-        border: 2px solid #0a0; /* Borda verde para se destacar */
-        background: rgba(34, 34, 34, 0.8); /* Barra de pesquisa com transparência */
-        color: #fff; /* Cor branca para o texto dentro da barra de pesquisa */
+        border: 2px solid #0a0;
+        background: rgba(34, 34, 34, 0.8);
+        color: #fff;
         margin-top: 10px;
-        width: 100%; /* Largura ajustada para preenchimento completo */
+        width: calc(100% - 30px); /* Ajuste para a largura considerando o padding */
         box-sizing: border-box;
         text-align: center;
     }
 
     input[type='text']:focus {
         outline: none;
-        box-shadow: 0 0 10px #0f0; /* Sombra verde para destacar o foco */
+        box-shadow: 0 0 10px #0f0;
     }
-
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -99,27 +102,48 @@
         <input type="text" id="address2" placeholder="Endereço 2 na Sepolia Testnet">
         <div id="balance2" class="balance-display">--</div>
     </div>
+    <div class="address-container">
+        <div class="address-title">Saldo PAMONHA</div>
+        <input type="text" id="address3" placeholder="Endereço ERC20">
+        <div id="balance3" class="balance-display">--</div>
+    </div>
 </div>
 
 <script>
 let balanceInterval1;
 let balanceInterval2;
+let balanceInterval3;
 
-function checkBalance(addressId, balanceId) {
+function adjustFontSizeForBalance(balanceId, balance) {
+    const balanceElement = document.getElementById(balanceId);
+    balanceElement.innerText = balance.toFixed(4);
+
+    if(balance.toFixed(4).length > 10) {
+        balanceElement.style.fontSize = '1.5rem'; // Diminui a fonte se o saldo for muito grande
+    } else {
+        balanceElement.style.fontSize = '2rem'; // Tamanho padrão se o saldo for menor
+    }
+}
+
+function checkBalance(addressId, balanceId, isToken = false) {
     const address = document.getElementById(addressId).value.trim();
     if (address === '') {
         document.getElementById(balanceId).innerText = '--';
         return;
     }
-
+    let url;
     const apiKey = 'DNJDG5KV5V8ZEG8NTYWYYIF6C38789P481';
-    const url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+    if (!isToken) {
+        url = `https://api-sepolia.etherscan.io/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+    } else {
+        url = `https://api-sepolia.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Ef397Cca4296D988EDDD7479479387B340Ff1f1&address=${address}&tag=latest&apikey=${apiKey}`;
+    }
 
     fetch(url)
     .then(response => response.json())
     .then(data => {
-        const balance = data.result / 1e18; // Convertendo de Wei para Ether
-        document.getElementById(balanceId).innerText = balance.toFixed(4) + ' ETH'; // 4 casas decimais
+        const balance = isToken ? data.result / 1e18 : data.result / 1e18;
+        adjustFontSizeForBalance(balanceId, balance);
     })
     .catch(error => {
         console.error('Erro ao buscar o saldo:', error);
@@ -137,6 +161,13 @@ document.getElementById('address2').addEventListener('input', function() {
     clearInterval(balanceInterval2);
     if (this.value.trim() !== '') {
         balanceInterval2 = setInterval(() => checkBalance('address2', 'balance2'), 3000);
+    }
+});
+
+document.getElementById('address3').addEventListener('input', function() {
+    clearInterval(balanceInterval3);
+    if (this.value.trim() !== '') {
+        balanceInterval3 = setInterval(() => checkBalance('address3', 'balance3', true), 3000);
     }
 });
 
