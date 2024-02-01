@@ -6,7 +6,6 @@
 <title>Pamonha Explorer</title>
 <link rel="icon" type="image/png" href="https://i.ibb.co/BByjJsj/pamonha-1.png">
 <style>
-    /* Estilos mantidos e ajustados conforme solicitado */
     body {
         background-image: url('https://images3.alphacoders.com/627/627574.jpg');
         background-size: cover;
@@ -47,25 +46,23 @@
         background: rgba(34, 34, 34, 0.8);
         margin: 10px;
         flex: 1;
-        min-width: 320px; /* Ajuste para melhor visualização */
+        min-width: 320px;
     }
     
-    .address-title {
+    .address-title, .address-preview {
         font-size: 2.4rem;
         color: #00ff00;
         margin-bottom: 10px;
     }
     
     .balance-display {
-        font-size: 2rem; /* Ajustado para tamanho inicial mais adequado */
+        font-size: 2rem;
         background: rgba(68, 68, 68, 0.8);
         color: #fff;
         padding: 20px;
         margin-top: 20px;
+        margin-bottom: 10px;
         border-radius: 10px;
-        overflow: hidden; /* Para evitar sobreposição */
-        white-space: nowrap; /* Mantém o texto em uma única linha */
-        text-overflow: ellipsis; /* Adiciona "..." se o texto exceder o espaço disponível */
     }
 
     input[type='text'] {
@@ -75,7 +72,7 @@
         background: rgba(34, 34, 34, 0.8);
         color: #fff;
         margin-top: 10px;
-        width: 100%; /* Aumento da largura do campo de pesquisa */
+        width: 100%;
         box-sizing: border-box;
         text-align: center;
     }
@@ -96,16 +93,19 @@
         <div class="address-title">Contrato Malicioso</div>
         <input type="text" id="address1" placeholder="Endereço 1 na Sepolia Testnet" autofocus>
         <div id="balance1" class="balance-display">--</div>
+        <div id="addressPreview1" class="address-preview">----</div>
     </div>
     <div class="address-container">
         <div class="address-title">Endereço do Criminoso</div>
         <input type="text" id="address2" placeholder="Endereço 2 na Sepolia Testnet">
         <div id="balance2" class="balance-display">--</div>
+        <div id="addressPreview2" class="address-preview">----</div>
     </div>
     <div class="address-container">
         <div class="address-title">Saldo PAMONHA</div>
         <input type="text" id="address3" placeholder="Endereço ERC20">
         <div id="balance3" class="balance-display">--</div>
+        <div id="addressPreview3" class="address-preview">----</div>
     </div>
 </div>
 
@@ -118,16 +118,21 @@ function adjustFontSizeForBalance(balanceId, balance, isToken = false) {
     const balanceElement = document.getElementById(balanceId);
     let formattedBalance = isToken ? Math.floor(balance).toString() : balance.toFixed(4); // Se for token, arredonda para baixo e converte para string
     balanceElement.innerText = isToken ? formattedBalance + ' PAMONHA' : formattedBalance + ' ETH';
+}
 
-    if(formattedBalance.length > 10) {
-        balanceElement.style.fontSize = '1.5rem'; // Diminui a fonte se o saldo for muito grande
+function updateAddressPreview(addressId, previewId) {
+    const address = document.getElementById(addressId).value.trim();
+    if(address.length > 8) {
+        const previewText = `${address.substring(0, 5)}...${address.substring(address.length - 5)}`;
+        document.getElementById(previewId).innerText = previewText;
     } else {
-        balanceElement.style.fontSize = '2rem'; // Tamanho padrão se o saldo for menor
+        document.getElementById(previewId).innerText = '----';
     }
 }
 
-function checkBalance(addressId, balanceId, isToken = false) {
+function checkBalance(addressId, balanceId, previewId, isToken = false) {
     const address = document.getElementById(addressId).value.trim();
+    updateAddressPreview(addressId, previewId); // Update address preview
     if (address === '') {
         document.getElementById(balanceId).innerText = '--';
         return;
@@ -154,21 +159,21 @@ function checkBalance(addressId, balanceId, isToken = false) {
 document.getElementById('address1').addEventListener('input', function() {
     clearInterval(balanceInterval1);
     if (this.value.trim() !== '') {
-        balanceInterval1 = setInterval(() => checkBalance('address1', 'balance1'), 3000);
+        balanceInterval1 = setInterval(() => checkBalance('address1', 'balance1', 'addressPreview1'), 3000);
     }
 });
 
 document.getElementById('address2').addEventListener('input', function() {
     clearInterval(balanceInterval2);
     if (this.value.trim() !== '') {
-        balanceInterval2 = setInterval(() => checkBalance('address2', 'balance2'), 3000);
+        balanceInterval2 = setInterval(() => checkBalance('address2', 'balance2', 'addressPreview2'), 3000);
     }
 });
 
 document.getElementById('address3').addEventListener('input', function() {
     clearInterval(balanceInterval3);
     if (this.value.trim() !== '') {
-        balanceInterval3 = setInterval(() => checkBalance('address3', 'balance3', true), 3000);
+        balanceInterval3 = setInterval(() => checkBalance('address3', 'balance3', 'addressPreview3', true), 3000);
     }
 });
 
