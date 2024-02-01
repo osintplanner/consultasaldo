@@ -114,11 +114,12 @@ let balanceInterval1;
 let balanceInterval2;
 let balanceInterval3;
 
-function adjustFontSizeForBalance(balanceId, balance) {
+function adjustFontSizeForBalance(balanceId, balance, isToken = false) {
     const balanceElement = document.getElementById(balanceId);
-    balanceElement.innerText = balance.toFixed(4);
+    let formattedBalance = isToken ? Math.floor(balance).toString() : balance.toFixed(4); // Se for token, arredonda para baixo e converte para string
+    balanceElement.innerText = isToken ? formattedBalance + ' PAMONHA' : formattedBalance + ' ETH';
 
-    if(balance.toFixed(4).length > 10) {
+    if(formattedBalance.length > 10) {
         balanceElement.style.fontSize = '1.5rem'; // Diminui a fonte se o saldo for muito grande
     } else {
         balanceElement.style.fontSize = '2rem'; // Tamanho padrão se o saldo for menor
@@ -143,7 +144,7 @@ function checkBalance(addressId, balanceId, isToken = false) {
     .then(response => response.json())
     .then(data => {
         const balance = isToken ? data.result / 1e18 : data.result / 1e18;
-        adjustFontSizeForBalance(balanceId, balance);
+        adjustFontSizeForBalance(balanceId, balance, isToken);
     })
     .catch(error => {
         console.error('Erro ao buscar o saldo:', error);
