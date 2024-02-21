@@ -46,7 +46,8 @@
         background: rgba(34, 34, 34, 0.8);
         margin: 10px;
         flex: 1;
-        min-width: 320px;
+        min-width: 500px; /* Ajusta a largura mínima para garantir que dois contêineres caibam em uma linha */
+        max-width: 45%; /* Garante que não ultrapassem metade da largura do contêiner pai, permitindo 2 por linha */
     }
     
     .address-title, .address-preview {
@@ -54,7 +55,6 @@
         color: #0f0;
         margin-bottom: 10px;
     }
-      
     
     .address-preview {
         font-size: 2.4rem;
@@ -114,16 +114,24 @@
         <div id="balance3" class="balance-display">--</div>
         <div id="addressPreview3" class="address-preview">----</div>
     </div>
+    <!-- Quarto contêiner adicionado -->
+    <div class="address-container">
+        <div class="address-title">Saldo PAMONHA</div>
+        <input type="text" id="address4" placeholder="Endereço ERC20">
+        <div id="balance4" class="balance-display">--</div>
+        <div id="addressPreview4" class="address-preview">----</div>
+    </div>
 </div>
 
 <script>
 let balanceInterval1;
 let balanceInterval2;
 let balanceInterval3;
+let balanceInterval4; // Intervalo para o quarto contêiner
 
 function adjustFontSizeForBalance(balanceId, balance, isToken = false) {
     const balanceElement = document.getElementById(balanceId);
-    let formattedBalance = isToken ? Math.floor(balance).toString() : balance.toFixed(4); // Se for token, arredonda para baixo e converte para string
+    let formattedBalance = isToken ? Math.floor(balance).toString() : balance.toFixed(4);
     balanceElement.innerText = isToken ? formattedBalance + ' PAMONHA' : formattedBalance + ' ETH';
 }
 
@@ -139,7 +147,7 @@ function updateAddressPreview(addressId, previewId) {
 
 function checkBalance(addressId, balanceId, previewId, isToken = false) {
     const address = document.getElementById(addressId).value.trim();
-    updateAddressPreview(addressId, previewId); // Update address preview
+    updateAddressPreview(addressId, previewId);
     if (address === '') {
         document.getElementById(balanceId).innerText = '--';
         return;
@@ -163,27 +171,15 @@ function checkBalance(addressId, balanceId, previewId, isToken = false) {
     });
 }
 
-document.getElementById('address1').addEventListener('input', function() {
-    clearInterval(balanceInterval1);
-    if (this.value.trim() !== '') {
-        balanceInterval1 = setInterval(() => checkBalance('address1', 'balance1', 'addressPreview1'), 3000);
-    }
+// Adicionando eventos para todos os campos de entrada
+['address1', 'address2', 'address3', 'address4'].forEach((id, index) => {
+    document.getElementById(id).addEventListener('input', function() {
+        clearInterval(window['balanceInterval' + (index + 1)]);
+        if (this.value.trim() !== '') {
+            window['balanceInterval' + (index + 1)] = setInterval(() => checkBalance(id, 'balance' + (index + 1), 'addressPreview' + (index + 1), index >= 2), 3000);
+        }
+    });
 });
-
-document.getElementById('address2').addEventListener('input', function() {
-    clearInterval(balanceInterval2);
-    if (this.value.trim() !== '') {
-        balanceInterval2 = setInterval(() => checkBalance('address2', 'balance2', 'addressPreview2'), 3000);
-    }
-});
-
-document.getElementById('address3').addEventListener('input', function() {
-    clearInterval(balanceInterval3);
-    if (this.value.trim() !== '') {
-        balanceInterval3 = setInterval(() => checkBalance('address3', 'balance3', 'addressPreview3', true), 3000);
-    }
-});
-
 </script>
 
 </body>
